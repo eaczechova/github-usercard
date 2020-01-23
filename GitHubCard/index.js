@@ -13,14 +13,19 @@
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
+const followersArray = ['eaczechova', 'shinecheyenne', 'TiffanyHoran', 'pjose92', 'alisonludick', 'jailang'];
 
 const cardContainer = document.querySelector('.cards');
-axios.get('https://api.github.com/users/eaczechova')
-  .then(response => {
-    const newCard = userCard(response.data);
-    cardContainer.appendChild(newCard);
-  })
-  .catch(err => console.log("Error:", err));
+
+followersArray.forEach( data => {
+  axios.get(`https://api.github.com/users/${data}`)
+    .then(response => {
+      const newCard = userCard(response.data);
+      cardContainer.appendChild(newCard);
+    })
+    .catch(err => console.log("Error:", err));
+})
+
 
 const userCard = (url) => {
   const card = document.createElement('div');
@@ -45,6 +50,7 @@ const userCard = (url) => {
   cardInfo.appendChild(location);
   cardInfo.appendChild(profile);
   profile.appendChild(profileUrl);
+
   cardInfo.appendChild(followers);
   cardInfo.appendChild(following);
   cardInfo.appendChild(bio);
@@ -58,8 +64,10 @@ const userCard = (url) => {
   cardTitle.textContent = url.name;
   username.textContent = url.login;
   location.textContent = `Location: ${url.location}`;
-  profileUrl.setAttribute('href', url.html_url);
-  profile.textContent = `Profile: ${profileUrl}`;
+  profile.insertAdjacentText('afterbegin', 'Profile: ');
+  profileUrl.setAttribute('href', 'url.html_url');
+  profileUrl.textContent = url.html_url;
+  
   followers.textContent = `Followers: ${url.followers}`;
   following.textContent = `Following: ${url.following}`;
   bio.textContent = `Bio: ${url.bio}`;
@@ -77,7 +85,7 @@ const userCard = (url) => {
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
